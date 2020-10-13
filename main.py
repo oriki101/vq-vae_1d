@@ -1,0 +1,1 @@
+from models.convolutional_encoder import Encoder
