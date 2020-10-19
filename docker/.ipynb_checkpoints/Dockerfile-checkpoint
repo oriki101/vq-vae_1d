@@ -46,7 +46,6 @@ fi \n\
 USER root
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
-RUN git clone http://zaku.sys.es.osaka-u.ac.jp:10080/OHMORI/vq-vae_1d.git
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["jupyter", "lab", "--no-browser", "--ip=0.0.0.0","--NotebookApp.token=''"]
