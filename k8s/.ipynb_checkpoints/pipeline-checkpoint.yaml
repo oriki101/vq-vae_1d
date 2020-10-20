@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: vq-vae-pipeline-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.0.1, pipelines.kubeflow.org/pipeline_compilation_time: '2020-10-20T23:23:56.147620',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.0.1, pipelines.kubeflow.org/pipeline_compilation_time: '2020-10-20T23:09:07.719236',
     pipelines.kubeflow.org/pipeline_spec: '{"description": "A pipeline to train vq-vae",
       "inputs": [{"default": "gaze", "name": "data_type", "optional": true}, {"default":
       "vq_vae", "name": "f_name", "optional": true}, {"default": "128", "name": "num_hiddens",
@@ -47,7 +47,7 @@ spec:
           update && apt-get -y install sshpass && sshpass -p ''house101'' ssh -f k_ohmori@192.168.11.107:~/hdd/ohmori/data
           .']
       command: [sh]
-      image: alpine/git:latest
+      image: ubuntu:18.04
       imagePullPolicy: IfNotPresent
       volumeMounts:
       - {mountPath: /workspace, name: create-pipeline-volume}
@@ -67,7 +67,7 @@ spec:
         '{{inputs.parameters.num_embeddings}}', --commitment_cost, '{{inputs.parameters.commitment_cost}}',
         --decay, '{{inputs.parameters.decay}}', --epoch, '{{inputs.parameters.epoch}}',
         --lr, '{{inputs.parameters.lr}}', --batch_size, '{{inputs.parameters.batch_size}}']
-      command: [python3, ~/workspace/vq-vae_1d/script/train.py]
+      command: [python3, train.py]
       image: zaku.sys.es.osaka-u.ac.jp:10081/OHMORI/vq-vae_1d:ohmori
       volumeMounts:
       - {mountPath: /workspace, name: create-pipeline-volume}

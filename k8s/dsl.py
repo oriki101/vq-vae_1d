@@ -10,7 +10,7 @@ def git_clone_op(repo_url, password):
         size="30Gi"
     )
 
-    image = 'alphine/git:latest'
+    image = 'alpine/git:latest'
 
     commands = [
         f"git clone {repo_url}",
@@ -36,7 +36,7 @@ def git_clone_op(repo_url, password):
     name='vq-vae pipeline',
     description='A pipeline to train vq-vae'
 )
-def vae_pipeline(f_name='vq_vae', num_hiddens=128, num_residual_hiddens=32,
+def vae_pipeline(data_type='gaze', f_name='vq_vae', num_hiddens=128, num_residual_hiddens=32,
                 num_residual_layers=2, embedding_dim=8, num_embeddings=128,
                 commitment_cost=0.25, decay=0.99, epoch=500,
                 lr = 1e-3, batch_size=32,
@@ -49,6 +49,7 @@ def vae_pipeline(f_name='vq_vae', num_hiddens=128, num_residual_hiddens=32,
         image='zaku.sys.es.osaka-u.ac.jp:10081/OHMORI/vq-vae_1d:ohmori',
         command=['python3', '~/workspace/vq-vae_1d/script/train.py'],
         arguments=[
+            '--data_type', data_type,
             '--f_name', f_name,
             '--num_hiddens', num_hiddens,
             '--num_residual_hiddens', num_residual_hiddens,

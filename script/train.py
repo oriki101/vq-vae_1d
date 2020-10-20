@@ -22,6 +22,9 @@ from models.vq_vae import VQ_VAE
 from utils.gaze_datasets import GazeDataset
 from utils.gaze_datasets import GazeDatasetValid
 from utils.gaze_datasets import GazeDatasetTest
+from utils.emg_datasets import EMGDataset
+from utils.emg_datasets import EMGDatasetValid
+from utils.emg_datasets import EMGDatasetTest
 
 
 def train(model, train_loader, optimizer, writer):
@@ -69,6 +72,7 @@ def valid(model, valid_loader, writer):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument('--data_type', type=str, default='gaze', help='gaze or emg')
     parser.add_argument('--f_name', type=str, default='vq_vae', help='.pth name')
     parser.add_argument('--num_hiddens', type=int, default=128, help='parameter of vq-vae encoder and decoder')
     parser.add_argument('--num_residual_hiddens', type=int, default=32, help='parameter of vq-vae')
@@ -97,9 +101,15 @@ if __name__ == '__main__':
 
 
     # Load Data
-    dataset = GazeDataset(transform=transforms.ToTensor())
-    valid_dataset = GazeDatasetValid(transform=transforms.ToTensor())
-    test_dataset = GazeDatasetTest(transform=transforms.ToTensor())
+    if args.data_type == 'gaze':
+        dataset = GazeDataset(transform=transforms.ToTensor())
+        valid_dataset = GazeDatasetValid(transform=transforms.ToTensor())
+        test_dataset = GazeDatasetTest(transform=transforms.ToTensor())
+    else:
+        dataset = EMGDataset(transform=transforms.ToTensor())
+        valid_dataset = EMGDatasetValid(transform=transforms.ToTensor())
+        test_dataset = EMGDatasetTest(transform=transforms.ToTensor())
+
     train_loader = DataLoader(dataset, shuffle=True, batch_size=batch_size)
     valid_loader = DataLoader(valid_dataset, shuffle=False, batch_size=batch_size)
     test_loader = DataLoader(test_dataset, shuffle=False, batch_size=batch_size)
