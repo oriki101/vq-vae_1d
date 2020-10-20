@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: vq-vae-pipeline-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.0.1, pipelines.kubeflow.org/pipeline_compilation_time: '2020-10-20T16:14:10.131976',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.0.1, pipelines.kubeflow.org/pipeline_compilation_time: '2020-10-20T19:18:06.113924',
     pipelines.kubeflow.org/pipeline_spec: '{"description": "A pipeline to train vq-vae",
       "inputs": [{"default": "vq_vae", "name": "f_name", "optional": true}, {"default":
       "128", "name": "num_hiddens", "optional": true}, {"default": "32", "name": "num_residual_hiddens",
@@ -31,7 +31,7 @@ spec:
           - ReadWriteMany
           resources:
             requests:
-              storage: 20Gi
+              storage: 30Gi
     outputs:
       parameters:
       - name: create-pipeline-volume-manifest
@@ -68,10 +68,13 @@ spec:
         --batch_size, '{{inputs.parameters.batch_size}}']
       command: [python3, ~/workspace/vq-vae_1d/script/train.py]
       image: zaku.sys.es.osaka-u.ac.jp:10081/OHMORI/vq-vae_1d:ohmori
+      volumeMounts:
+      - {mountPath: /workspace, name: create-pipeline-volume}
     inputs:
       parameters:
       - {name: batch_size}
       - {name: commitment_cost}
+      - {name: create-pipeline-volume-name}
       - {name: decay}
       - {name: embedding_dim}
       - {name: epoch}
@@ -84,6 +87,9 @@ spec:
     outputs:
       artifacts:
       - {name: mlpipeline-ui-metadata, path: /mlpipeline-ui-metadata.json}
+    volumes:
+    - name: create-pipeline-volume
+      persistentVolumeClaim: {claimName: '{{inputs.parameters.create-pipeline-volume-name}}'}
   - name: vq-vae-pipeline
     inputs:
       parameters:
@@ -111,10 +117,12 @@ spec:
           - {name: repo_url, value: '{{inputs.parameters.repo_url}}'}
       - name: vq-vae
         template: vq-vae
+        dependencies: [create-pipeline-volume, git-clone]
         arguments:
           parameters:
           - {name: batch_size, value: '{{inputs.parameters.batch_size}}'}
           - {name: commitment_cost, value: '{{inputs.parameters.commitment_cost}}'}
+          - {name: create-pipeline-volume-name, value: '{{tasks.create-pipeline-volume.outputs.parameters.create-pipeline-volume-name}}'}
           - {name: decay, value: '{{inputs.parameters.decay}}'}
           - {name: embedding_dim, value: '{{inputs.parameters.embedding_dim}}'}
           - {name: epoch, value: '{{inputs.parameters.epoch}}'}

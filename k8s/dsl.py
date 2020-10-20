@@ -7,7 +7,7 @@ def git_clone_op(repo_url, password):
         name='create pipeline volume',
         resource_name='pipeline-pvc',
         modes=['ReadWriteMany'],
-        size="20Gi"
+        size="30Gi"
     )
 
     image = 'alphine/git:latest'
@@ -61,6 +61,7 @@ def vae_pipeline(f_name='vq_vae', num_hiddens=128, num_residual_hiddens=32,
             '--lr', lr,
             '--batch_size', batch_size
         ],
+        pvolumes={'/workspace': git_clone.pvolume},
         file_outputs={
             'MLPipeline UI metadata': '/mlpipeline-ui-metadata.json'
         }

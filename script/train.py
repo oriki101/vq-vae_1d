@@ -15,6 +15,7 @@ from torchvision.utils import save_image
 from torch.utils.tensorboard import SummaryWriter
 from matplotlib import pyplot as plt
 import argparse
+import json
 
 # import VQ-VAE class and Dataset classes
 from models.vq_vae import VQ_VAE
