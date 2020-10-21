@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: vq-vae-pipeline-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.0.1, pipelines.kubeflow.org/pipeline_compilation_time: '2020-10-20T23:23:56.147620',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.0.1, pipelines.kubeflow.org/pipeline_compilation_time: '2020-10-21T21:29:48.557150',
     pipelines.kubeflow.org/pipeline_spec: '{"description": "A pipeline to train vq-vae",
       "inputs": [{"default": "gaze", "name": "data_type", "optional": true}, {"default":
       "vq_vae", "name": "f_name", "optional": true}, {"default": "128", "name": "num_hiddens",
@@ -32,7 +32,7 @@ spec:
           - ReadWriteMany
           resources:
             requests:
-              storage: 30Gi
+              storage: 1Gi
     outputs:
       parameters:
       - name: create-pipeline-volume-manifest
@@ -43,9 +43,8 @@ spec:
         valueFrom: {jsonPath: '{.status.capacity.storage}'}
   - name: git-clone
     container:
-      args: [-c, 'git clone {{inputs.parameters.repo_url}} && cd vq-vae_1d && apt-get
-          update && apt-get -y install sshpass && sshpass -p ''house101'' ssh -f k_ohmori@192.168.11.107:~/hdd/ohmori/data
-          .']
+      args: [-c, 'git clone {{inputs.parameters.repo_url}} /workspace/vq-vae_1d &&
+          pwd && ls']
       command: [sh]
       image: alpine/git:latest
       imagePullPolicy: IfNotPresent
@@ -67,10 +66,15 @@ spec:
         '{{inputs.parameters.num_embeddings}}', --commitment_cost, '{{inputs.parameters.commitment_cost}}',
         --decay, '{{inputs.parameters.decay}}', --epoch, '{{inputs.parameters.epoch}}',
         --lr, '{{inputs.parameters.lr}}', --batch_size, '{{inputs.parameters.batch_size}}']
-      command: [python3, ~/workspace/vq-vae_1d/script/train.py]
-      image: zaku.sys.es.osaka-u.ac.jp:10081/OHMORI/vq-vae_1d:ohmori
+      command: [python3, train.py]
+      image: zaku.sys.es.osaka-u.ac.jp:10081/ohmori/vq-vae_1d:v0.0.0
       volumeMounts:
+      - {mountPath: /home/jovyan, name: create-pipeline-volume}
       - {mountPath: /workspace, name: create-pipeline-volume}
+      - {mountPath: /home/jovyan/vq-vae_1d/data, name: data}
+      - {mountPath: /home/jovyan/vq-vae_1d/script/pth, name: pth}
+      - {mountPath: /home/jovyan/vq-vae_1d/script/logs, name: logs}
+      workingDir: /home/jovyan/vq-vae_1d/script
     inputs:
       parameters:
       - {name: batch_size}
@@ -92,6 +96,14 @@ spec:
     volumes:
     - name: create-pipeline-volume
       persistentVolumeClaim: {claimName: '{{inputs.parameters.create-pipeline-volume-name}}'}
+    - name: create-pipeline-volume
+      persistentVolumeClaim: {claimName: '{{inputs.parameters.create-pipeline-volume-name}}'}
+    - name: data
+      nfs: {path: /data/share/data, server: 192.168.11.107}
+    - name: logs
+      nfs: {path: /data/share/logs, server: 192.168.11.107}
+    - name: pth
+      nfs: {path: /data/share/pth, server: 192.168.11.107}
   - name: vq-vae-pipeline
     inputs:
       parameters:
