@@ -37,7 +37,7 @@ def git_clone_op(repo_url, volume_op):
     name='vq-vae pipeline',
     description='A pipeline to train vq-vae'
 )
-def vae_pipeline(data_type='gaze', f_name='vq_vae', num_hiddens=128, num_residual_hiddens=32,
+def vae_pipeline(data_type='gaze', f_name='vq_vae', num_hiddens=32, num_residual_hiddens=32,
                 num_residual_layers=2, embedding_dim=8, num_embeddings=128,
                 commitment_cost=0.25, decay=0.99, epoch=500,
                 lr = 1e-3, batch_size=32,

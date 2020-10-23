@@ -16,6 +16,7 @@ from torch.utils.tensorboard import SummaryWriter
 from matplotlib import pyplot as plt
 import argparse
 import json
+import datetime
 
 # import VQ-VAE class and Dataset classes
 from models.vq_vae import VQ_VAE
@@ -74,7 +75,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_type', type=str, default='gaze', help='gaze or emg')
     parser.add_argument('--f_name', type=str, default='vq_vae', help='.pth name')
-    parser.add_argument('--num_hiddens', type=int, default=128, help='parameter of vq-vae encoder and decoder')
+    parser.add_argument('--num_hiddens', type=int, default=32, help='parameter of vq-vae encoder and decoder')
     parser.add_argument('--num_residual_hiddens', type=int, default=32, help='parameter of vq-vae')
     parser.add_argument('--num_residual_layers', type=int, default=2, help='the number of residual layer')
     parser.add_argument('--embedding_dim', type=int, default=8, help='embedding dimension')

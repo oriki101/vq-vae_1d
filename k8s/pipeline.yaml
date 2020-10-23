@@ -2,10 +2,10 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: vq-vae-pipeline-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.0.1, pipelines.kubeflow.org/pipeline_compilation_time: '2020-10-23T13:07:54.226424',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.0.1, pipelines.kubeflow.org/pipeline_compilation_time: '2020-10-23T15:42:01.929570',
     pipelines.kubeflow.org/pipeline_spec: '{"description": "A pipeline to train vq-vae",
       "inputs": [{"default": "gaze", "name": "data_type", "optional": true}, {"default":
-      "vq_vae", "name": "f_name", "optional": true}, {"default": "128", "name": "num_hiddens",
+      "vq_vae", "name": "f_name", "optional": true}, {"default": "32", "name": "num_hiddens",
       "optional": true}, {"default": "32", "name": "num_residual_hiddens", "optional":
       true}, {"default": "2", "name": "num_residual_layers", "optional": true}, {"default":
       "8", "name": "embedding_dim", "optional": true}, {"default": "128", "name":
@@ -154,7 +154,7 @@ spec:
     parameters:
     - {name: data_type, value: gaze}
     - {name: f_name, value: vq_vae}
-    - {name: num_hiddens, value: '128'}
+    - {name: num_hiddens, value: '32'}
     - {name: num_residual_hiddens, value: '32'}
     - {name: num_residual_layers, value: '2'}
     - {name: embedding_dim, value: '8'}
