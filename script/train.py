@@ -125,9 +125,10 @@ if __name__ == '__main__':
     f_name = args.f_name
     dt_now = datetime.datetime.now()
     now = "{}-{}-{}".format(dt_now.year, dt_now.month, dt_now.day)
+    name_dir = "pth/{}".format(now)
     name = "pth/{}/{}.pth".format(now, f_name)
-    if not os.path.isdir(name):
-        os.makedirs(name)
+    if not os.path.isdir(name_dir):
+        os.makedirs(name_dic)
     log_dir = "logs/{}/{}".format(now, f_name)
     if not os.path.isdir(log_dir):
         os.makedirs(log_dir)
