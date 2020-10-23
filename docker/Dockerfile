@@ -16,7 +16,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 #   && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update -y && apt-get install -y \
-    libgl1-mesa-glx wget curl git tmux imagemagick htop libsndfile1 nodejs npm sshpass\
+    libgl1-mesa-glx wget curl git tmux imagemagick htop libsndfile1 nodejs npm nfs-common\
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
