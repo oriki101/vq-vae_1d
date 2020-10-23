@@ -129,7 +129,7 @@ if __name__ == '__main__':
     name_dir = "pth/{}".format(now)
     name = "pth/{}/{}.pth".format(now, f_name)
     if not os.path.isdir(name_dir):
-        os.makedirs(name_dic)
+        os.makedirs(name_dir)
     log_dir = "logs/{}/{}".format(now, f_name)
     if not os.path.isdir(log_dir):
         os.makedirs(log_dir)
