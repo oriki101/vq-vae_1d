@@ -11,7 +11,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # && rm -rf /var/lib/apt/lists/*
 
 # RUN apt-get update -y && apt-get -y upgrade && apt-get install -y \
-#     wget curl git apt-transport-https icewm xvfb x11vnc tmux python-opengl imagemagick htop \
+#     wget curl git apt-transport-https icewm xvfb x11vnc tmux python-opengl imagemagick htop nfs-common\
 #   && apt-get clean \
 #   && rm -rf /var/lib/apt/lists/*
 
@@ -22,7 +22,7 @@ RUN apt-get update -y && apt-get install -y \
 
 # RUN pip install roboschool pybullet 
 RUN pip install wrapt --upgrade --ignore-installed
-RUN pip install gym gym-minigrid pyopengl pylint natsort kfp
+RUN pip install gym gym-minigrid pyopengl pylint natsort kfp seaborn
 RUN pip install transformers==2.11.0
 RUN pip install librosa
 RUN pip install numba==0.48 --ignore-installed
@@ -82,6 +82,27 @@ ENV HOME /home/${USER_NAME}
 
 # https://www.hanselman.com/blog/HowToMakeAPrettyPromptInWindowsTerminalWithPowerlineNerdFontsCascadiaCodeWSLAndOhmyposh.aspx
 # RUN go get -u github.com/justjanne/powerline-go
+
+
+RUN apt-get update -y && apt-get -y upgrade \
+    && wget https://dl.google.com/go/go1.15.3.linux-amd64.tar.gz \
+    && tar -xvf go1.15.3.linux-amd64.tar.gz \
+    && mv go /usr/local \
+    && export GOROOT=/usr/local/go \
+    && export PATH=$GOPATH/bin:$GOROOT/bin:$PATH \
+    && go get -u github.com/justjanne/powerline-go \
+    && rm -rf /var/lib/apt/lists/*
+RUN echo $'\n\
+GOPATH=$HOME/go \n\
+function _update_ps1() { \n\
+    PS1="$($GOPATH/bin/powerline-go -error $?)\n>" \n\
+} \n\
+if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then \n\
+    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND" \n\
+fi \n\
+' >> $HOME/.bashrc
+
+
 
 # RUN echo $'\n\
 # GOPATH=$HOME/go \n\

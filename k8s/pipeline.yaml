@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: vq-vae-pipeline-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.0.1, pipelines.kubeflow.org/pipeline_compilation_time: '2020-10-23T15:42:01.929570',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.0.1, pipelines.kubeflow.org/pipeline_compilation_time: '2020-11-01T11:22:41.151303',
     pipelines.kubeflow.org/pipeline_spec: '{"description": "A pipeline to train vq-vae",
       "inputs": [{"default": "gaze", "name": "data_type", "optional": true}, {"default":
       "vq_vae", "name": "f_name", "optional": true}, {"default": "32", "name": "num_hiddens",
@@ -12,9 +12,8 @@ metadata:
       "num_embeddings", "optional": true}, {"default": "0.25", "name": "commitment_cost",
       "optional": true}, {"default": "0.99", "name": "decay", "optional": true}, {"default":
       "500", "name": "epoch", "optional": true}, {"default": "0.001", "name": "lr",
-      "optional": true}, {"default": "32", "name": "batch_size", "optional": true},
-      {"default": "http://OHMORI:house101@zaku.sys.es.osaka-u.ac.jp:10080/OHMORI/vq-vae_1d.git",
-      "name": "repo_url", "optional": true}], "name": "vq-vae pipeline"}'}
+      "optional": true}, {"default": "32", "name": "batch_size", "optional": true}],
+      "name": "vq-vae pipeline"}'}
   labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.0.1}
 spec:
   entrypoint: vq-vae-pipeline
@@ -43,8 +42,8 @@ spec:
         valueFrom: {jsonPath: '{.status.capacity.storage}'}
   - name: git-clone
     container:
-      args: [-c, 'git clone {{inputs.parameters.repo_url}} /workspace/vq-vae_1d &&
-          pwd && ls']
+      args: [-c, 'git clone http://oauth2:GwpqNg4XFT3z-H5FTk7j@zaku.sys.es.osaka-u.ac.jp:10080/OHMORI/vq-vae_1d.git
+          /workspace/vq-vae_1d && pwd && ls']
       command: [sh]
       image: alpine/git:latest
       imagePullPolicy: IfNotPresent
@@ -53,7 +52,6 @@ spec:
     inputs:
       parameters:
       - {name: create-pipeline-volume-name}
-      - {name: repo_url}
     volumes:
     - name: create-pipeline-volume
       persistentVolumeClaim: {claimName: '{{inputs.parameters.create-pipeline-volume-name}}'}
@@ -121,7 +119,6 @@ spec:
       - {name: num_hiddens}
       - {name: num_residual_hiddens}
       - {name: num_residual_layers}
-      - {name: repo_url}
     dag:
       tasks:
       - {name: create-pipeline-volume, template: create-pipeline-volume}
@@ -131,7 +128,6 @@ spec:
         arguments:
           parameters:
           - {name: create-pipeline-volume-name, value: '{{tasks.create-pipeline-volume.outputs.parameters.create-pipeline-volume-name}}'}
-          - {name: repo_url, value: '{{inputs.parameters.repo_url}}'}
       - name: vq-vae
         template: vq-vae
         dependencies: [create-pipeline-volume, git-clone]
@@ -164,7 +160,7 @@ spec:
     - {name: epoch, value: '500'}
     - {name: lr, value: '0.001'}
     - {name: batch_size, value: '32'}
-    - {name: repo_url, value: 'http://OHMORI:house101@zaku.sys.es.osaka-u.ac.jp:10080/OHMORI/vq-vae_1d.git'}
   serviceAccountName: pipeline-runner
+  ttlSecondsAfterFinished: 20
   imagePullSecrets:
   - {name: regcred}

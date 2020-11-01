@@ -41,9 +41,18 @@ def vae_pipeline(data_type='gaze', f_name='vq_vae', num_hiddens=32, num_residual
                 num_residual_layers=2, embedding_dim=8, num_embeddings=128,
                 commitment_cost=0.25, decay=0.99, epoch=500,
                 lr = 1e-3, batch_size=32,
-                repo_url='http://OHMORI:house101@zaku.sys.es.osaka-u.ac.jp:10080/OHMORI/vq-vae_1d.git'):
+                # repo_url='http://oauth2:GwpqNg4XFT3z-H5FTk7j@zaku.sys.es.osaka-u.ac.jp:10080/OHMORI/vq-vae_1d.git'
+                ):
+
+    repo_url='http://oauth2:GwpqNg4XFT3z-H5FTk7j@zaku.sys.es.osaka-u.ac.jp:10080/OHMORI/vq-vae_1d.git'
     #secret setting for pipeline
     dsl.get_pipeline_conf().set_image_pull_secrets([k8s_client.V1LocalObjectReference(name="regcred")])
+
+    #TTLの設定
+    # conf = dsl.PipelineConf()
+    # conf.ttl_seconds_after_finished = 10
+    dsl.get_pipeline_conf().set_ttl_seconds_after_finished(20)
+
 
     # Volume for storing Git repository (PV)
     volume_op = dsl.VolumeOp(
@@ -118,8 +127,8 @@ def vae_pipeline(data_type='gaze', f_name='vq_vae', num_hiddens=32, num_residual
     # volume_op.delete().after(train)
     # dsl.ResourceOp(
     #     name='delete-volume',
-    #     # k8s_resource=volume_op.k8s_resource,
-    #     k8s_resource=train.pvolume.k8s_resource,
+    #     k8s_resource=volume_op.k8s_resource,
+    #     # k8s_resource=train.pvolume.k8s_resource,
     #     action='delete'
     # ).after(train)
 
