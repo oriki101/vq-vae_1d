@@ -92,6 +92,7 @@ RUN apt-get update -y && apt-get -y upgrade \
     && export PATH=$GOPATH/bin:$GOROOT/bin:$PATH \
     && go get -u github.com/justjanne/powerline-go \
     && rm -rf /var/lib/apt/lists/* \
+    && rm *
 RUN echo $'\n\
 GOPATH=$HOME/go \n\
 function _update_ps1() { \n\
