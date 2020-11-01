@@ -16,7 +16,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 #   && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update -y && apt-get install -y \
-    libgl1-mesa-glx wget curl git tmux imagemagick htop libsndfile1 nodejs npm nfs-common\
+    libgl1-mesa-glx wget curl git tmux imagemagick htop libsndfile1 nodejs npm nfs-common unzip\
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -81,18 +81,25 @@ USER ${USER_NAME}
 ENV HOME /home/${USER_NAME}
 
 # https://www.hanselman.com/blog/HowToMakeAPrettyPromptInWindowsTerminalWithPowerlineNerdFontsCascadiaCodeWSLAndOhmyposh.aspx
+# https://tecadmin.net/install-go-on-ubuntu/
 # RUN go get -u github.com/justjanne/powerline-go
 
 USER root
 RUN apt-get update -y && apt-get -y upgrade \
     && wget https://dl.google.com/go/go1.15.3.linux-amd64.tar.gz \
     && tar -xvf go1.15.3.linux-amd64.tar.gz \
-    && mv go /go_profile \
-    && export GOROOT=/go_profile/go \
+    && mv go /usr/local \
+    && export GOROOT=/usr/local/go \
     && export PATH=$GOPATH/bin:$GOROOT/bin:$PATH \
     && go get -u github.com/justjanne/powerline-go \
     && rm -rf /var/lib/apt/lists/* \
-    && rm *
+    && rm -r go1.15.3.linux-amd64.tar.gz \
+    && wget https://github.com/microsoft/cascadia-code/releases/download/v2009.22/CascadiaCode-2009.22.zip \
+    && unzip CascadiaCode-2009.22.zip \
+    && mkdir $HOME/.fonts \
+    && cp ttf/CascadiaCodePL.ttf $HOME/.fonts/ \
+    && fc-cache $HOME.fonts \
+    && rm -rf otf ttf woff2 CascadiaCode-2009.22.zip
 RUN echo $'\n\
 GOPATH=$HOME/go \n\
 function _update_ps1() { \n\
