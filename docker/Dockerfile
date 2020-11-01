@@ -83,15 +83,15 @@ ENV HOME /home/${USER_NAME}
 # https://www.hanselman.com/blog/HowToMakeAPrettyPromptInWindowsTerminalWithPowerlineNerdFontsCascadiaCodeWSLAndOhmyposh.aspx
 # RUN go get -u github.com/justjanne/powerline-go
 
-
+USER root
 RUN apt-get update -y && apt-get -y upgrade \
     && wget https://dl.google.com/go/go1.15.3.linux-amd64.tar.gz \
     && tar -xvf go1.15.3.linux-amd64.tar.gz \
-    && mv go /usr/local \
-    && export GOROOT=/usr/local/go \
+    && mv go /go_profile \
+    && export GOROOT=/go_profile/go \
     && export PATH=$GOPATH/bin:$GOROOT/bin:$PATH \
     && go get -u github.com/justjanne/powerline-go \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
 RUN echo $'\n\
 GOPATH=$HOME/go \n\
 function _update_ps1() { \n\
