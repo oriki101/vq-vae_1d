@@ -1,4 +1,5 @@
-FROM pytorch/pytorch:1.5.1-cuda10.1-cudnn7-runtime
+# FROM pytorch/pytorch:1.5.1-cuda10.1-cudnn7-runtime
+FROM pytorch/pytorch:1.7.0-cuda11.0-cudnn8-runtime
 
 RUN DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Tokyo
@@ -32,7 +33,7 @@ RUN npm install n -g \
     && n stable
 RUN apt purge -y nodejs npm
 RUN pip install jupyterlab 
-RUN pip install tensorflow==2.1.0 jupyter-tensorboard==0.2.0 tensorflow-estimator==2.1.0 tensorboard==2.1.0
+RUN pip install tensorflow==2.2.0 jupyter-tensorboard==0.2.0 tensorflow-estimator==2.2.0 tensorboard==2.2.0
 RUN jupyter labextension install jupyterlab_tensorboard
 RUN jupyter tensorboard enable --system
 RUN jupyter lab clean
@@ -99,7 +100,19 @@ RUN apt-get update -y && apt-get -y upgrade \
     && mkdir $HOME/.fonts \
     && cp ttf/CascadiaCodePL.ttf $HOME/.fonts/ \
     && fc-cache $HOME.fonts \
-    && rm -rf otf ttf woff2 CascadiaCode-2009.22.zip
+    && rm -rf otf ttf woff2 CascadiaCode-2009.22.zip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+    
+#RUN apt-get update -y && apt-get upgrade \
+#    && git clone https://github.com/powerline/fonts.git --depth=1 \
+#    && cd fonts \
+#    && ./install.sh \
+#    && cd .. \
+#    && rm -rf fonts \
+#    && apt-get clean \
+#    && rm -rf /var/lib/apt/lists/*
+
 RUN echo $'\n\
 GOPATH=$HOME/go \n\
 function _update_ps1() { \n\
@@ -110,6 +123,31 @@ if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then \n\
 fi \n\
 ' >> $HOME/.bashrc
 
+RUN mkdir -p $HOME/.jupyter/lab/user-settings/@jupyterlab/notebook-extension/ \
+    && mkdir -p $HOME/.jupyter/lab/user-settings/@jupyterlab/terminal-extension \
+    && mkdir -p $HOME/.local/share/code-server/User
+    
+RUN echo '\n\
+{ \n\
+    "codeCellConfig": { \n\
+        "lineNumbers": true \n\
+    } \n\
+} \n\
+' > $HOME/.jupyter/lab/user-settings/@jupyterlab/notebook-extension/tracker.jupyterlab-settings
+
+RUN echo '\
+{ \n\
+    "fontFamily": "Cascadia Code PL" \n\
+} \n\
+' > $HOME/.jupyter/lab/user-settings/@jupyterlab/terminal-extension/plugin.jupyterlab-settings
+
+RUN echo '\
+{ \n\
+    "editor.fontFamily": "\"Cascadia Code PL\" ", \n\
+    "editor.fontLigatures": null, \n\
+    "terminal.integrated.shell.linux": "/bin/bash" \n\
+} \n\
+' > $HOME/.local/share/code-server/User/settings.json
 
 
 # RUN echo $'\n\
@@ -127,6 +165,7 @@ USER root
 # RUN chmod +x /usr/local/bin/entrypoint.sh
 
 ENV NB_PREFIX /
+ENV SHELL=/bin/bash
 
 # ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["sh","-c", "jupyter lab --notebook-dir=/home/jovyan --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=${NB_PREFIX}"]
