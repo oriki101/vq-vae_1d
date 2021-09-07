@@ -26,14 +26,6 @@ from utils.gaze_datasets import GazeDatasetTest
 from utils.emg_datasets import EMGDataset
 from utils.emg_datasets import EMGDatasetValid
 from utils.emg_datasets import EMGDatasetTest
-from utils.e4_bvp_datasets import BVPDataset
-from utils.e4_bvp_datasets import BVPDatasetValid
-from utils.e4_gsr_datasets import GSRDataset
-from utils.e4_gsr_datasets import GSRDatasetValid
-from utils.e4_temperature_datasets import TemperatureDataset
-from utils.e4_temperature_datasets import TemperatureDatasetValid
-from utils.respiration_datasets import RespirationDataset
-from utils.respiration_datasets import RespirationDatasetValid
 
 
 def train(model, train_loader, optimizer, writer):
@@ -114,27 +106,14 @@ if __name__ == '__main__':
         dataset = GazeDataset(transform=transforms.ToTensor())
         valid_dataset = GazeDatasetValid(transform=transforms.ToTensor())
         test_dataset = GazeDatasetTest(transform=transforms.ToTensor())
-    elif args.data_type == 'emg':
+    else:
         dataset = EMGDataset(transform=transforms.ToTensor())
         valid_dataset = EMGDatasetValid(transform=transforms.ToTensor())
         test_dataset = EMGDatasetTest(transform=transforms.ToTensor())
-    elif args.data_type == 'bvp':
-        dataset = BVPDatasetDataset(transform=transforms.ToTensor())
-        valid_dataset = BVPDatasetDatasetValid(transform=transforms.ToTensor())
-    elif args.data_type == 'gsr':
-        dataset = GSRDatasetDataset(transform=transforms.ToTensor())
-        valid_dataset = GSRDatasetDatasetValid(transform=transforms.ToTensor())
-    elif args.data_type == 'temperature':
-        dataset = TemperatureDatasetDataset(transform=transforms.ToTensor())
-        valid_dataset = TemperatureDatasetDatasetValid(transform=transforms.ToTensor())
-    else:
-        dataset = RespirationDatasetDataset(transform=transforms.ToTensor())
-        valid_dataset = RespirationDatasetDatasetValid(transform=transforms.ToTensor())
-
 
     train_loader = DataLoader(dataset, shuffle=True, batch_size=batch_size)
     valid_loader = DataLoader(valid_dataset, shuffle=False, batch_size=batch_size)
-    # test_loader = DataLoader(test_dataset, shuffle=False, batch_size=batch_size)
+    test_loader = DataLoader(test_dataset, shuffle=False, batch_size=batch_size)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     # Define VQ-VAE model

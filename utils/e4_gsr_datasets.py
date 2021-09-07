@@ -3,13 +3,12 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset, Subset
 import torchvision.transforms as transforms
 
-
-class GazeDataset(Dataset):
+class GSRDataset(Dataset):
     def __init__(self, transform=None):
-        # csvデータの読み出し
         self.transform = transform
-        self.dataframe = np.load('../data/Gaze_norm.npy')
-    
+        self.dataframe = np.load('../data/gsr_va-vqe_train_data.npy')
+        # self.dataframe = self.dataframe.reshape(-1, 1, 3000)
+            
     # データのサイズ
     def __len__(self):
         return len(self.dataframe)
@@ -21,12 +20,12 @@ class GazeDataset(Dataset):
         if self.transform:
             data = self.transform(data)
         return data
-    
-    
-class GazeDatasetValid(Dataset):
+
+class GSRDatasetValid(Dataset):
     def __init__(self, transform=None):
         self.transform = transform
-        self.dataframe = np.load('../data/Gaze_valid_norm.npy')
+        self.dataframe = np.load('../data/gsr_va-vqe_valid_data.npy')
+        # self.dataframe = self.dataframe.reshape(-1, 1, 3000)
             
     
     # データのサイズ
@@ -41,11 +40,11 @@ class GazeDatasetValid(Dataset):
             data = self.transform(data)
         return data
 
-
-class GazeDatasetTest(Dataset):
+class GSRDatasetTest(Dataset):
     def __init__(self, transform=None):
         self.transform = transform
-        self.dataframe = np.load('../data/gaze_eating_data.npy')
+        self.dataframe = np.load('../data/gsr_eating_data.npy')
+
             
     
     # データのサイズ
