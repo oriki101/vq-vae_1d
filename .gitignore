@@ -1,5 +1,5 @@
 /data/
 /notebook/logs/
 /notebook/pth/
-.ipynb_checkpoints
-*/.ipynb_checkpoints/*
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
