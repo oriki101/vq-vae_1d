@@ -7,7 +7,9 @@ class RespirationDataset(Dataset):
     def __init__(self, transform=None):
         self.transform = transform
         self.dataframe = np.load('../data/respiration_va-vqe_train_data.npy')
-        # self.dataframe = self.dataframe.reshape(-1, 1, 3000)
+
+        append_data = np.load('../data/respiration_va-vqe_valid_data.npy')
+        self.dataframe = np.append(self.dataframe, append_data, axis=0)
             
     # データのサイズ
     def __len__(self):
@@ -25,7 +27,9 @@ class RespirationDatasetValid(Dataset):
     def __init__(self, transform=None):
         self.transform = transform
         self.dataframe = np.load('../data/respiration_va-vqe_valid_data.npy')
-        # self.dataframe = self.dataframe.reshape(-1, 1, 3000)
+        
+        append_data = np.load('../data/respiration_va-vqe_train_data.npy')
+        self.dataframe = np.append(self.dataframe, append_data, axis=0)
             
     
     # データのサイズ
@@ -44,7 +48,9 @@ class RespirationNoiseRemovalDataset(Dataset):
     def __init__(self, transform=None):
         self.transform = transform
         self.dataframe = np.load('../data/respiration_va-vqe_train_data_noise_removal.npy')
-        # self.dataframe = self.dataframe.reshape(-1, 1, 3000)
+
+        append_data = np.load('../data/respiration_va-vqe_valid_data_noise_removal.npy')
+        self.dataframe = np.append(self.dataframe, append_data, axis=0)
             
     # データのサイズ
     def __len__(self):
@@ -62,7 +68,9 @@ class RespirationNoiseRemovalDatasetValid(Dataset):
     def __init__(self, transform=None):
         self.transform = transform
         self.dataframe = np.load('../data/respiration_va-vqe_valid_data_noise_removal.npy')
-        # self.dataframe = self.dataframe.reshape(-1, 1, 3000)
+        
+        append_data = np.load('../data/respiration_va-vqe_train_data_noise_removal.npy')
+        self.dataframe = np.append(self.dataframe, append_data, axis=0)
             
     
     # データのサイズ
@@ -80,7 +88,7 @@ class RespirationNoiseRemovalDatasetValid(Dataset):
 class RespirationDatasetTest(Dataset):
     def __init__(self, transform=None):
         self.transform = transform
-        self.dataframe = np.load('../data/respiration_eating_data.npy')
+        self.dataframe = np.load('../data/master_experiment/k_ohmori/respiration_eating_data.npy')
 
             
     

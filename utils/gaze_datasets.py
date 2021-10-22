@@ -45,7 +45,7 @@ class GazeDatasetValid(Dataset):
 class GazeDatasetTest(Dataset):
     def __init__(self, transform=None):
         self.transform = transform
-        self.dataframe = np.load('../data/gaze_eating_data.npy')
+        self.dataframe = np.load('../data/master_experiment/k_ohmori/gaze_eating_data.npy')
             
     
     # データのサイズ

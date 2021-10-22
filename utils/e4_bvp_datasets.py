@@ -43,7 +43,7 @@ class BVPDatasetValid(Dataset):
 class BVPDatasetTest(Dataset):
     def __init__(self, transform=None):
         self.transform = transform
-        self.dataframe = np.load('../data/bvp_eating_data.npy')
+        self.dataframe = np.load('../data/master_experiment/k_ohmori/bvp_eating_data.npy')
 
             
     

@@ -43,7 +43,8 @@ class EMGDatasetValid(Dataset):
 class EMGDatasetTest(Dataset):
     def __init__(self, transform=None):
         self.transform = transform
-        self.dataframe = np.load('../data/emg_eating_data.npy')
+        self.dataframe = np.load('../data/master_experiment/k_ohmori/emg_eating_data.npy')
+        # self.dataframe = np.load('EMG_test.npy')
 
             
     
